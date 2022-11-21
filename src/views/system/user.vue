@@ -261,7 +261,7 @@
           border: true,
           index: true,
           selection: true,
-          viewBtn: true,
+          viewBtn: false,
           //dialogType: 'drawer',
           dialogClickModal: false,
           column: [
@@ -269,12 +269,6 @@
               label: "登录账号",
               prop: "account",
               search: true,
-              display: false
-            },
-            {
-              label: "所属租户",
-              prop: "tenantName",
-              slot: true,
               display: false
             },
             {
@@ -296,29 +290,9 @@
               display: false
             },
             {
-              label: "用户平台",
-              prop: "userTypeName",
-              slot: true,
+              label: "积分",
+              prop: "score",
               display: false
-            },
-            {
-              label: "用户平台",
-              type: "select",
-              dicUrl: "/api/blade-system/dict/dictionary?code=user_type",
-              props: {
-                label: "dictValue",
-                value: "dictKey"
-              },
-              dataType: "number",
-              search: true,
-              hide: true,
-              display: false,
-              prop: "userType",
-              rules: [{
-                required: true,
-                message: "请选择用户平台",
-                trigger: "blur"
-              }]
             },
           ],
           group: [
@@ -417,6 +391,16 @@
                     min: 2,
                     max: 5,
                     message: '姓名长度在2到5个字符'
+                  }]
+                },
+                {
+                  label: "积分",
+                  prop: "score",
+                  type: "number",
+                  rules: [{
+                    required: true,
+                    message: "请输入用户积分",
+                    trigger: "blur"
                   }]
                 },
                 {
