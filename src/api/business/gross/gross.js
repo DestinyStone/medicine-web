@@ -11,4 +11,13 @@ export default class Gross {
       }
     })
   }
+  static dictList(excludeIds) {
+    return request({
+      url: '/api/bus/gross/list',
+      method: 'get',
+      params: {
+        excludeIds
+      }
+    })
+  }
 }

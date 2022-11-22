@@ -8,7 +8,6 @@
                  :page.sync="page"
                  v-model="form"
                  @row-update="handlerUpdate"
-                 @row-save="handlerSubmit"
                  :permission="permissionList"
                  :before-open="beforeOpen"
                  :before-close="beforeClose"
@@ -25,9 +24,25 @@
             新 增
           </el-button>
         </template>
+        <template slot-scope="scope" slot="menu">
+          <div style="display: flex; justify-content: space-around;">
+            <el-link :underline="false" type="primary" @click="handlerClickUpdate(scope.row, scope.index)">修改</el-link>
+            <el-link :underline="false" type="warning" @click="handlerDelete(scope.row)">删除</el-link>
+          </div>
+        </template>
+        <template slot="dictDataNames" slot-scope="scope">
+          <div style="display: flex; overflow: auto;">
+            <el-tag v-for="(item, index) in scope.row.dictList" :key="'tag' + index" style="margin-right: 10px;">{{item.name}}</el-tag>
+          </div>
+        </template>
       </avue-crud>
     </basic-container>
-    <synonym-submit v-if="showSubmit" :show.sync="showSubmit"/>
+    <synonym-submit v-if="showSubmit"
+                    :id="selectId"
+                    :default-dict-list="dictList"
+                    :show.sync="showSubmit"
+                    :update="handlerUpdate"
+                    :save="handlerSave"/>
   </div>
 </template>
 
@@ -54,6 +69,7 @@
         showUpload: false,
         showPart: false,
         selectId: "",
+        dictList: [],
         showSubmit: false,
         form: {},
         selectionList: [],
@@ -73,7 +89,7 @@
           searchMenuSpan: 6,
           tree: true,
           border: true,
-          menu: false,
+          menu: true,
           index: true,
           selection: true,
           viewBtn: true,
@@ -87,13 +103,27 @@
             {
               label: "名称",
               prop: "name",
+              width: 180,
               search: true,
               span: 24,
               rules: [
                 {required: true, message: "请输入名称", trigger: "blur"}
               ],
               searchPlaceholder: "名称"
-            }
+            },
+            {
+              label: "同义症状",
+              prop: "dictDataNames",
+              span: 24,
+              slot: true,
+            },
+            {
+              label: "描述",
+              prop: "remark",
+              span: 24,
+              width: 300,
+              slot: true,
+            },
           ]
         },
         data: [],
@@ -119,6 +149,13 @@
       },
     },
     methods: {
+      handlerSave(data, call) {
+        Synonym.save(data).then(() => {
+          this.$message({type: "success", message: "新增成功"});
+          this.onLoad(this.page);
+          call();
+        })
+      },
       handlerClickDetail(row) {
         this.selectId = row.id;
         this.showDetail = true;
@@ -153,15 +190,17 @@
       handlerClickImport() {
         this.showUpload = true;
       },
-      handlerUpdate(row, index, done, loading) {
-        Medicine.update(row.id, row).then(() => {
+      handlerUpdate(data, call) {
+        Synonym.update(this.selectId, data).then(() => {
           this.$message({type: "success", message: "更新成功"});
           this.onLoad(this.page);
-          done();
+          call();
         })
       },
-      handlerClickUpdate(row, index) {
-        this.$refs["crud"].rowEdit(row, index);
+      handlerClickUpdate(row) {
+        this.selectId = row.id;
+        this.dictList = row.dictList.map(item => ({label: item.name, value: item.id}));
+        this.showSubmit = true;
       },
       handlerDelete(row) {
         this.$confirm(`是否确定删除【${row.name}】?`, "提示", {
@@ -169,22 +208,15 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          return Medicine.delete(row.id);
+          return Synonym.delete(row.id);
         }).then(() => {
           this.$message({type: "success", message: "删除成功"});
           this.onLoad(this.page);
         })
       },
-      handlerSubmit(row,done, loading) {
-        row.type = this.type;
-        Medicine.save(row).then(() => {
-          this.$message({type: "success", message: "新增成功"});
-          this.onLoad(this.page);
-          done();
-        })
-      },
       handlerClickSubmit() {
         this.selectId = "";
+        this.dictList = [];
         this.showSubmit = true;
       },
       searchReset() {
@@ -229,7 +261,7 @@
             let data = res.data.data;
             this.data = data.records;
             this.page.total = data.total;
-
+            this.data = this.data.map(item => ({...item, dictDataNames: item.dictList ? item.dictList.map(dictItem => dictItem.name).join(","): ""}))
             this.loading = false;
             this.selectionClear();
           }
