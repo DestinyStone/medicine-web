@@ -50,4 +50,11 @@ export default class Medicine {
       }
     });
   }
+  static listGross(names, type) {
+    return request({
+      url: `/api/bus/medicine/list/gross/${type}`,
+      method: 'post',
+      data: names
+    });
+  }
 }

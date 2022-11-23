@@ -136,7 +136,7 @@
       },
       handlerClickAdd() {
         if (this.validatenull(this.value)) {
-          this.$message({type: "success", message: "请选择同义词"});
+          this.$message({type: "warning", message: "请选择同义词"});
           return;
         }
         let item = this.options.filter(item => item.value === this.value)[0];

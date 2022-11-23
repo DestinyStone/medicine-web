@@ -19,7 +19,7 @@
   <script src="<%= BASE_URL %>cdn/xlsx/FileSaver.min.js"></script>
   <script src="<%= BASE_URL %>cdn/xlsx/xlsx.full.min.js"></script>
   <link rel="icon" href="<%= BASE_URL %>favicon.png">
-  <title>Saber企业级开发平台</title>
+  <title>经方诊疗辅助系统</title>
   <style>
     html,
     body,
@@ -27,6 +27,9 @@
       height: 100%;
       margin: 0;
       padding: 0;
+    }
+    .avue-view {
+      height: 100%;
     }
     .basic-container .el-form-item__label {
       display: none;
@@ -90,6 +93,12 @@
     }
     .el-popup-parent--hidden .el-dialog__wrapper {
       overflow: unset !important;
+    }
+    .avue-crud .el-card__body .avue-input {
+      max-width: 300px !important;
+    }
+    .avue-crud .el-card__body .avue-form__group {
+      flex-flow: nowrap !important;
     }
   </style>
 </head>

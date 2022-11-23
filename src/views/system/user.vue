@@ -1,15 +1,15 @@
 <template>
   <el-row>
-    <el-col :span="5">
-      <div class="box">
-        <el-scrollbar>
-          <basic-container>
-            <avue-tree :option="treeOption" :data="treeData" @node-click="nodeClick"/>
-          </basic-container>
-        </el-scrollbar>
-      </div>
-    </el-col>
-    <el-col :span="19">
+<!--    <el-col :span="5">-->
+<!--      <div class="box">-->
+<!--        <el-scrollbar>-->
+<!--          <basic-container>-->
+<!--            <avue-tree :option="treeOption" :data="treeData" @node-click="nodeClick"/>-->
+<!--          </basic-container>-->
+<!--        </el-scrollbar>-->
+<!--      </div>-->
+<!--    </el-col>-->
+    <el-col :span="24">
       <basic-container>
         <avue-crud :option="option"
                    :search.sync="search"
@@ -52,27 +52,27 @@
                        icon="el-icon-refresh"
                        @click="handleReset">密码重置
             </el-button>
-            <el-button type="info"
-                       size="small"
-                       plain
-                       v-if="userInfo.role_name.includes('admin')"
-                       icon="el-icon-setting"
-                       @click="handlePlatform">平台配置
-            </el-button>
-            <el-button type="success"
-                       size="small"
-                       plain
-                       v-if="userInfo.role_name.includes('admin')"
-                       icon="el-icon-upload2"
-                       @click="handleImport">导入
-            </el-button>
-            <el-button type="warning"
-                       size="small"
-                       plain
-                       v-if="userInfo.role_name.includes('admin')"
-                       icon="el-icon-download"
-                       @click="handleExport">导出
-            </el-button>
+<!--            <el-button type="info"-->
+<!--                       size="small"-->
+<!--                       plain-->
+<!--                       v-if="userInfo.role_name.includes('admin')"-->
+<!--                       icon="el-icon-setting"-->
+<!--                       @click="handlePlatform">平台配置-->
+<!--            </el-button>-->
+<!--            <el-button type="success"-->
+<!--                       size="small"-->
+<!--                       plain-->
+<!--                       v-if="userInfo.role_name.includes('admin')"-->
+<!--                       icon="el-icon-upload2"-->
+<!--                       @click="handleImport">导入-->
+<!--            </el-button>-->
+<!--            <el-button type="warning"-->
+<!--                       size="small"-->
+<!--                       plain-->
+<!--                       v-if="userInfo.role_name.includes('admin')"-->
+<!--                       icon="el-icon-download"-->
+<!--                       @click="handleExport">导出-->
+<!--            </el-button>-->
           </template>
           <template slot-scope="{row}"
                     slot="tenantName">
@@ -196,6 +196,7 @@
         }
       };
       return {
+        reloadKey: 0,
         form: {},
         search:{},
         roleBox: false,
@@ -283,15 +284,25 @@
               slot: true,
               display: false
             },
-            {
-              label: "所属部门",
-              prop: "deptName",
-              slot: true,
-              display: false
-            },
+            // {
+            //   label: "所属部门",
+            //   prop: "deptName",
+            //   slot: true,
+            //   display: false
+            // },
             {
               label: "积分",
               prop: "score",
+              display: false
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
+              display: false
+            },
+            {
+              label: "更新时间",
+              prop: "updateTime",
               display: false
             },
           ],
@@ -301,26 +312,26 @@
               prop: 'baseInfo',
               icon: 'el-icon-user-solid',
               column: [
-                {
-                  label: "所属租户",
-                  prop: "tenantId",
-                  type: "tree",
-                  dicUrl: "/api/blade-system/tenant/select",
-                  props: {
-                    label: "tenantName",
-                    value: "tenantId"
-                  },
-                  hide: !website.tenantMode,
-                  addDisplay: website.tenantMode,
-                  editDisplay: website.tenantMode,
-                  viewDisplay: website.tenantMode,
-                  rules: [{
-                    required: true,
-                    message: "请输入所属租户",
-                    trigger: "click"
-                  }],
-                  span: 24,
-                },
+                // {
+                //   label: "所属租户",
+                //   prop: "tenantId",
+                //   type: "tree",
+                //   dicUrl: "/api/blade-system/tenant/select",
+                //   props: {
+                //     label: "tenantName",
+                //     value: "tenantId"
+                //   },
+                //   hide: !website.tenantMode,
+                //   addDisplay: website.tenantMode,
+                //   editDisplay: website.tenantMode,
+                //   viewDisplay: website.tenantMode,
+                //   rules: [{
+                //     required: true,
+                //     message: "请输入所属租户",
+                //     trigger: "click"
+                //   }],
+                //   span: 24,
+                // },
                 {
                   label: "登录账号",
                   prop: "account",
@@ -330,23 +341,23 @@
                     trigger: "blur"
                   }],
                 },
-                {
-                  label: "用户平台",
-                  type: "select",
-                  dicUrl: "/api/blade-system/dict/dictionary?code=user_type",
-                  props: {
-                    label: "dictValue",
-                    value: "dictKey"
-                  },
-                  dataType: "number",
-                  slot: true,
-                  prop: "userType",
-                  rules: [{
-                    required: true,
-                    message: "请选择用户平台",
-                    trigger: "blur"
-                  }]
-                },
+                // {
+                //   label: "用户平台",
+                //   type: "select",
+                //   dicUrl: "/api/blade-system/dict/dictionary?code=user_type",
+                //   props: {
+                //     label: "dictValue",
+                //     value: "dictKey"
+                //   },
+                //   dataType: "number",
+                //   slot: true,
+                //   prop: "userType",
+                //   rules: [{
+                //     required: true,
+                //     message: "请选择用户平台",
+                //     trigger: "blur"
+                //   }]
+                // },
                 {
                   label: '密码',
                   prop: 'password',
@@ -476,39 +487,39 @@
                     trigger: "click"
                   }]
                 },
-                {
-                  label: "所属部门",
-                  prop: "deptId",
-                  type: "tree",
-                  multiple: true,
-                  dicData: [],
-                  props: {
-                    label: "title"
-                  },
-                  checkStrictly: true,
-                  slot: true,
-                  rules: [{
-                    required: true,
-                    message: "请选择所属部门",
-                    trigger: "click"
-                  }]
-                },
-                {
-                  label: "所属岗位",
-                  prop: "postId",
-                  type: "tree",
-                  multiple: true,
-                  dicData: [],
-                  props: {
-                    label: "postName",
-                    value: "id"
-                  },
-                  rules: [{
-                    required: true,
-                    message: "请选择所属岗位",
-                    trigger: "click"
-                  }],
-                },
+                // {
+                //   label: "所属部门",
+                //   prop: "deptId",
+                //   type: "tree",
+                //   multiple: true,
+                //   dicData: [],
+                //   props: {
+                //     label: "title"
+                //   },
+                //   checkStrictly: true,
+                //   slot: true,
+                //   rules: [{
+                //     required: true,
+                //     message: "请选择所属部门",
+                //     trigger: "click"
+                //   }]
+                // },
+                // {
+                //   label: "所属岗位",
+                //   prop: "postId",
+                //   type: "tree",
+                //   multiple: true,
+                //   dicData: [],
+                //   props: {
+                //     label: "postName",
+                //     value: "id"
+                //   },
+                //   rules: [{
+                //     required: true,
+                //     message: "请选择所属岗位",
+                //     trigger: "click"
+                //   }],
+                // },
               ]
             },
           ]
@@ -693,16 +704,18 @@
       initData(tenantId) {
         getRoleTree(tenantId).then(res => {
           const column = this.findObject(this.option.group, "roleId");
-          column.dicData = res.data.data;
+          this.$set(column, 'dicData', res.data.data);
+          // column.dicData = res.data.data;
+          this.reloadKey++;
         });
-        getDeptTree(tenantId).then(res => {
-          const column = this.findObject(this.option.group, "deptId");
-          column.dicData = res.data.data;
-        });
-        getPostList(tenantId).then(res => {
-          const column = this.findObject(this.option.group, "postId");
-          column.dicData = res.data.data;
-        });
+        // getDeptTree(tenantId).then(res => {
+        //   const column = this.findObject(this.option.group, "deptId");
+        //   column.dicData = res.data.data;
+        // });
+        // getPostList(tenantId).then(res => {
+        //   const column = this.findObject(this.option.group, "postId");
+        //   column.dicData = res.data.data;
+        // });
       },
       submitRole() {
         const roleList = this.$refs.treeRole.getCheckedKeys().join(",");
@@ -716,9 +729,9 @@
         });
       },
       rowSave(row, done, loading) {
-        row.deptId = row.deptId.join(",");
+        // row.deptId = row.deptId.join(",");
         row.roleId = row.roleId.join(",");
-        row.postId = row.postId.join(",");
+        // row.postId = row.postId.join(",");
         add(row).then(() => {
           this.initFlag = false;
           this.onLoad(this.page);
@@ -959,6 +972,9 @@
           this.selectionClear();
         });
       }
+    },
+    created() {
+      this.initData(website.tenantId);
     }
   };
 </script>

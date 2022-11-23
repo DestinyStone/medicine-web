@@ -1,6 +1,6 @@
 export default {
   tip: '提示',
-  title: '单位信息资源管理系统',
+  title: '经方诊疗辅助系统',
   logoutTip: '退出系统, 是否继续?',
   submitText: '确定',
   cancelText: '取消',
@@ -67,7 +67,7 @@ export default {
   },
   login: {
     title: '登录 ',
-    info: '单位信息资源管理系统',
+    info: '经方诊疗辅助系统',
     tenantId: '请输入租户ID',
     username: '请输入账号',
     password: '请输入密码',

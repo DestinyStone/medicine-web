@@ -20,4 +20,20 @@ export default class Gross {
       }
     })
   }
+  static listSynonyms(name) {
+    return request({
+      url: '/api/bus/gross/list/synonyms',
+      method: 'get',
+      params: {
+        name
+      }
+    })
+  }
+  static listWith(names, type) {
+    return request({
+      url: `/api/bus/gross/list/with/${type}`,
+      method: 'post',
+      data: names
+    })
+  }
 }

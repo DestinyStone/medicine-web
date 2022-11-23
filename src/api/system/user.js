@@ -118,3 +118,11 @@ export const grant = (userIds, roleIds) => {
     }
   })
 }
+
+
+export const userScoreIncr = () => {
+  return request({
+    url: '/api/blade-user/score/decr',
+    method: 'get',
+  })
+}
