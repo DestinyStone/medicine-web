@@ -38,8 +38,17 @@
       }
     },
     methods: {
-      init() {
+      setHeight() {
+        if (this.validatenull(this.$refs['checkMainDetail'])) {
+          return;
+        }
         this.height = this.$refs['checkMainDetail'].offsetHeight - 160;
+      },
+      init() {
+        this.setHeight();
+        setInterval(() => {
+          this.setHeight();
+        }, 500)
       }
     },
     mounted() {

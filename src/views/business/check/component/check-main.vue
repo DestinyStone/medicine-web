@@ -25,8 +25,14 @@
         <div  style="display: flex; margin-left: 40px;">
           <div style="white-space: nowrap; line-height: 30px; padding-right: 20px;">性别:</div>
           <div style="margin-top: 5px;">
-            <el-radio v-model="form.sex" label="0" >男</el-radio>
-            <el-radio v-model="form.sex"label="1" >女</el-radio>
+            <el-radio v-model="form.sex" :label="0" >男</el-radio>
+            <el-radio v-model="form.sex" :label="1" >女</el-radio>
+          </div>
+        </div>
+        <div  style="display: flex; margin-left: 40px;">
+          <div style="white-space: nowrap; line-height: 30px; padding-right: 20px;">年龄:</div>
+          <div>
+            <el-input size="small" style="width: 100px" v-model="form.age"/>
           </div>
         </div>
         <div  style="display: flex;  margin-left: 40px;">
@@ -72,11 +78,11 @@
       <div style="width: 17%; max-width: 17%; box-sizing: border-box;padding-right: 30px;">
         <div style="height: 50px; line-height: 50px;">古医经典辨识</div>
         <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-          <check-main-select :options="medicine1Options" :is-hover-stop="true"  @click="(data) => handlerClick(data, 0)"/>
+          <check-main-select :loading="medicine1Loading" :loading-text="medicineLoadingText"  :options="medicine1Options" :key="'a' + reloadKey" :is-hover-stop="true"  @click="(data) => handlerClick(data, 0)"/>
         </div>
         <div style="height: 50px; line-height: 50px;">名医验案参考</div>
         <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-          <check-main-select :options="medicine2Options" :is-hover-stop="true" @click="(data) => handlerClick(data, 1)"/>
+          <check-main-select :loading="medicine2Loading" :loading-text="medicineLoadingText"  :options="medicine2Options" :key="'b' + reloadKey" :is-hover-stop="true" @click="(data) => handlerClick(data, 1)"/>
         </div>
       </div>
       <div style="width: 32%; max-width: 32%;box-sizing: border-box; padding-right: 10px;">
@@ -91,7 +97,8 @@
       </div>
     </div>
     <div style="padding: 10px; display: flex; justify-content: center;">
-      <el-button type="primary" @click="handlerNext">下一步</el-button>
+      <el-button type="success" @click="handlerMatch">智能匹配</el-button>
+      <el-button type="primary" @click="handlerNext">确定诊疗</el-button>
     </div>
   </basic-container>
 </template>
@@ -107,7 +114,14 @@
     components: {CheckMainDetail, CheckMainSelect},
     data() {
       return {
-        form: {},
+        reloadKey: 0,
+        form: {
+          name: "张三",
+          sex: 1,
+          age: 12,
+          phone: "12222222222222",
+          address: "官洲dddddddd",
+        },
         radio: 0,
         height: 0,
         search: "",
@@ -120,11 +134,76 @@
         medicine1Detail: {},
         medicine2Detail: {},
         time: "",
+        isChange: false,
+        medicine1Loading: false,
+        medicine2Loading: false,
+        medicineLoadingText: "智能匹配中",
       }
     },
     methods: {
+      handlerMatch() {
+        if (this.diseaseOptions.length === 0) {
+          this.$message({message: "请添加病友症状", type: "warning"});
+          return;
+        }
+        if(!this.isChange) {
+          this.$message({message: "智能匹配已执行", type: "warning"});
+          return;
+        }
+
+        this.isChange = false;
+        this.medicine1Loading = true;
+        this.medicine2Loading = true;
+        userScoreIncr().then(res => {
+          this.$message({type: "success", message: `已扣除1积分, 当前积分为:${res.data.data}`});
+          this.reloadKey++;
+          this.loadMedicine();
+        }, () => {
+          this.isChange = true;
+        })
+      },
       handlerNext() {
-        this.$emit("next");
+        if (this.validatenull(this.form.name)) {
+          this.$message({message: "请填写姓名", type: "warning"});
+          return;
+        }
+
+        if (this.validatenull(this.form.age)) {
+          this.$message({message: "请填写年龄", type: "warning"});
+          return;
+        }
+
+        if (this.validatenull(this.form.sex)) {
+          this.$message({message: "请选择性别", type: "warning"});
+          return;
+        }
+
+        if (this.validatenull(this.form.phone)) {
+          this.$message({message: "请填写联系电话", type: "warning"});
+          return;
+        }
+
+        if (this.validatenull(this.form.address)) {
+          this.$message({message: "请填写住址", type: "warning"});
+          return;
+        }
+
+        if (this.diseaseOptions.length === 0) {
+          this.$message({message: "请添加病友症状", type: "warning"});
+          return;
+        }
+
+        if(this.isChange) {
+          this.$message({message: "请点击智能匹配", type: "warning"});
+          return;
+        }
+
+        if (this.medicine1Loading === true || this.medicine2Loading === true){
+          this.$message({message: "智能匹配中，请稍等一会", type: "warning"});
+          return;
+        }
+        this.form.caseTime = this.time;
+        this.$emit("next", {form: this.form, diseaseOptions: this.diseaseOptions, medicine1Options: this.medicine1Options, medicine2Options : this.medicine2Options});
       },
       setTime() {
         let date = new Date();
@@ -137,7 +216,6 @@
         if (type === 1) {
           this.medicine2Detail = data.obj;
         }
-
       },
       handlerClose(item) {
         let filter = this.diseaseOptions.filter(filterItem => filterItem.label === item.label)[0];
@@ -145,9 +223,11 @@
 
         this.diseaseOptions.splice(index, 1);
         this.loadWith();
-        this.loadMedicine();
-        this.medicine1Detail = {};
-        this.medicine2Detail = {};
+        this.isChange = true;
+        // this.loadMedicine();
+        // this.medicine1Detail = {};
+        // this.medicine2Detail = {};
+        // this.reloadKey++;
       },
       handlerDbSearch(item) {
         let filter = this.diseaseOptions.filter(filterItem => filterItem.label === item.label);
@@ -155,14 +235,12 @@
           this.$message({type: "warning", message: `病友症状中已存在:${item.value}`});
           return;
         }
-        userScoreIncr().then(res => {
-          this.$message({type: "success", message: `已扣除1积分, 当前积分为:${res.data.data}`});
-          let copy = JSON.parse(JSON.stringify(item));
-          copy.slot = true;
-          this.diseaseOptions.push(copy);
-          this.loadWith();
-          this.loadMedicine();
-        });
+
+        let copy = JSON.parse(JSON.stringify(item));
+        copy.slot = true;
+        this.diseaseOptions.push(copy);
+        this.isChange = true;
+        this.loadWith();
       },
       init() {
         this.contentHeight = document.body.offsetHeight - 380;
@@ -172,26 +250,33 @@
         let names = this.diseaseOptions.map(item => item.value);
         this.medicine1Options.splice(0, this.medicine1Options.length);
         this.medicine2Options.splice(0, this.medicine2Options.length);
-
+        this.medicine1Detail = {};
+        this.medicine2Detail = {};
         if (this.validatenull(names)) {
           return;
         }
+        this.medicine1Loading = true;
+        this.medicine2Loading = true;
         Medicine.listGross(names, 0).then(res => {
           this.medicine1Options = res.data.data.map(item => ({
             label: item.id,
-            value: item.putUp,
+            value: item.name,
             obj: item,
             slot: true
           }));
-        })
+        }).finally(() => {
+          this.medicine1Loading = false;
+        });
         Medicine.listGross(names, 1).then(res => {
           this.medicine2Options = res.data.data.map(item => ({
             label: item.id,
-            value: item.putUp,
+            value: item.name,
             obj: item,
             slot: true
           }));
-        })
+        }).finally(() => {
+          this.medicine2Loading = false;
+        });
       },
       loadWith() {
         let names = this.diseaseOptions.map(item => item.value);

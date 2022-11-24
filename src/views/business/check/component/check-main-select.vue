@@ -1,5 +1,5 @@
 <template>
-  <div class="check-main-select" style="height: 100%; overflow: auto; width:100%;">
+  <div class="check-main-select" style="height: 100%; overflow: auto; width:100%;"  element-loading-spinner="el-icon-loading"   v-loading="loading"  :element-loading-text="loadingText">
     <div class="check-main-select-item" :class="{'active': currentIndex === index}" @click="handlerClick(item, index)" @dblclick="handlerDbClick(item, index)" v-for="(item, index) in options" :key="index" style="padding: 10px; cursor: pointer; display: flex; justify-content: space-between;">
       <div style="white-space: nowrap; padding-right: 10px;">
         <span v-if="item.slot === true">{{item.value}}</span>
@@ -16,6 +16,14 @@
   export default {
     name: "checkMainSelect",
     props: {
+      loadingText: {
+        type: String,
+        default: "",
+      },
+      loading: {
+        type: Boolean,
+        default: false,
+      },
       isHoverStop: {
         type: Boolean,
         default: false,
@@ -64,7 +72,7 @@
     background: #40a9ff;
     color: #ffffff;
   }
-  .check-main-select-item .active {
+  .check-main-select .active {
     background: #40a9ff;
     color: #ffffff;
   }

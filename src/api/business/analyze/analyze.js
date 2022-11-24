@@ -50,4 +50,13 @@ export default class Analyze {
       }
     });
   }
+  static detailAll(names) {
+    return request({
+      url: '/api/bus/analyze/detail/all',
+      method: 'get',
+      params: {
+        names
+      }
+    });
+  }
 }

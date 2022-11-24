@@ -57,4 +57,11 @@ export default class Medicine {
       data: names
     });
   }
+  static component(data) {
+    return request({
+      url: `/api/bus/medicine/component`,
+      method: 'post',
+      data: data
+    });
+  }
 }
