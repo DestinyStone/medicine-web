@@ -21,10 +21,10 @@
                  @on-load="onLoad"
       >
         <template slot="menuLeft">
-          <el-button type="primary" @click="handlerClickSubmit">
+          <el-button type="primary" size="small"  @click="handlerClickSubmit">
             新 增
           </el-button>
-          <el-button type="warning" @click="handlerClickBatchDelete">
+          <el-button type="warning" size="small"  @click="handlerClickBatchDelete">
             删 除
           </el-button>
         </template>
@@ -108,6 +108,7 @@
               prop: "remark",
               type: "textarea",
               span: 24,
+              overHidden: true,
               rules: [
                 {required: true, message: "请输入症状", trigger: "blur"}
               ]

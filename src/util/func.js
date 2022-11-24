@@ -90,4 +90,47 @@ export default class func {
   static split(str) {
     return str ? String(str).split(',') : '';
   }
+
+  /**
+   * 下载文件
+   * @param res 请求返回的res
+   */
+  static downLoadFile(res, customFilename) {
+    let filename = null, disposition = null, blob = null;
+    // 兼容 GenericController 中的下载
+    if (Blob.prototype.isPrototypeOf(res)) {
+      disposition = res["$headers$"]["content-disposition"];
+      blob = new Blob([res]);
+    } else {
+      disposition = res.headers["content-disposition"];
+      blob = new Blob([res.data]);
+    }
+    // 兼容 GenericController 中的下载
+    if (disposition && disposition.indexOf("filename*=") != -1) {
+      filename = disposition.substring(disposition.indexOf("''") + 2);
+    } else {
+      filename = disposition.substring(disposition.indexOf("=") + 1);
+    }
+    filename = decodeURIComponent(filename, "utf-8");
+
+    if (customFilename) {
+      filename = customFilename + filename.substring(filename.lastIndexOf("."));
+    }
+
+    if (typeof window.chrome !== 'undefined') {
+      // Chrome
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      // IE
+      window.navigator.msSaveBlob(new Blob([blob], { type: 'application/force-download' }), filename);
+    } else {
+      // Firefox
+      var file = new File([blob], filename, { type: 'application/force-download' });
+      window.open(URL.createObjectURL(file));
+    }
+  }
+
 }

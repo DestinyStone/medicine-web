@@ -21,18 +21,27 @@
                  @on-load="onLoad"
       >
         <template slot="menuLeft">
-          <el-button type="primary" @click="handlerClickSubmit">
+          <el-button type="primary" size="small" @click="handlerClickSubmit">
             新 增
           </el-button>
-          <el-button type="warning" @click="handlerClickBatchDelete">
+          <el-button type="warning" size="small"  @click="handlerClickBatchDelete">
             删 除
           </el-button>
           <el-button
+            size="small"
             type="success"
             @click="handlerClickImport"
-            icon="el-icon-upload "
+            icon="el-icon-upload"
           >
             {{uploadButtonText}}
+          </el-button>
+          <el-button
+            size="small"
+            type="info"
+            @click="handlerClickDownload"
+            icon="el-icon-download"
+          >
+            导入模板下载
           </el-button>
         </template>
         <template slot-scope="scope" slot="menu">
@@ -53,6 +62,7 @@
   import Medicine from "../../../api/business/medicine/medicine";
   import FileUploadDialog from "../../../components/file/file-upload-dialog";
   import MedicineDetail from "../medicine/component/medicine-detail";
+  import func from "../../../util/func";
 
   export default {
     name: "medicine",
@@ -170,6 +180,12 @@
       },
     },
     methods: {
+      handlerClickDownload() {
+        Medicine.download(this.type).then(res => {
+          func.downLoadFile(res);
+        })
+
+      },
       handlerClickDetail(row) {
         this.selectId = row.id;
         this.showDetail = true;

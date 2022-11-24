@@ -20,7 +20,7 @@
                  @on-load="onLoad"
       >
         <template slot="menuLeft">
-          <el-button type="primary" @click="handlerClickSubmit">
+          <el-button type="primary" size="small" @click="handlerClickSubmit">
             新 增
           </el-button>
         </template>
@@ -91,7 +91,7 @@
           border: true,
           menu: true,
           index: true,
-          selection: true,
+          selection: false,
           viewBtn: true,
           menuWidth: 220,
           dialogClickModal: false,

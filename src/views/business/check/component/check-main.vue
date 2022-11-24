@@ -2,15 +2,30 @@
   <basic-container style="height: 100%;">
     <div style="display: flex; justify-content: space-between;">
       <div style="display: flex; flex-grow: 1; width: 80%">
-        <div style="height: 30px; font-size: 20px; width: 100px;">初诊</div>
-        <div style="display: flex;">
-          <div style="white-space: nowrap; line-height: 30px; padding-right: 20px;">复诊病例编号:</div>
-          <el-input size="small"/>
-        </div>
+        <div style="height: 30px; font-size: 20px; width: 100px;">{{form.type === 0 ? '初诊' : '复诊'}}</div>
         <div  style="display: flex; padding-left: 40px;">
           <div  style="white-space: nowrap; line-height: 30px; padding-right: 20px;">姓名:</div>
-          <el-input  size="small"/>
+          <el-select v-model="query.name" clearable  filterable size="small">
+            <el-option
+              v-for="item in nameOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </div>
+        <div style="display: flex;  padding-left: 40px;">
+          <div style="white-space: nowrap; line-height: 30px; padding-right: 20px;">复诊病例编号:</div>
+          <el-select v-model="query.code" clearable  @change="handlerChangeCode" filterable size="small">
+            <el-option
+              v-for="item in codeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <el-button size="small" type="primary" style="margin-left: 20px;" @click="handlerClickBefore">复诊</el-button>
       </div>
       <div style="min-width: 320px;">
          <div style="line-height: 30px; white-space: nowrap">本次就诊时间: <span style="border-bottom: 1px solid #CCCCCC; font-size: 18px; padding: 0 20px;">{{time}}</span></div>
@@ -109,18 +124,18 @@
   import Medicine from "../../../../api/business/medicine/medicine";
   import CheckMainDetail from "./check-main-detail";
   import {userScoreIncr} from "../../../../api/system/user";
+  import Case from "../../../../api/business/case/Case";
   export default {
     name: "checkMain",
     components: {CheckMainDetail, CheckMainSelect},
     data() {
       return {
+        query: {},
+        codeOptions: [],
+        nameOptions: [],
         reloadKey: 0,
         form: {
-          name: "张三",
-          sex: 1,
-          age: 12,
-          phone: "12222222222222",
-          address: "官洲dddddddd",
+          type: 0,
         },
         radio: 0,
         height: 0,
@@ -138,9 +153,61 @@
         medicine1Loading: false,
         medicine2Loading: false,
         medicineLoadingText: "智能匹配中",
+
+      }
+    },
+    watch: {
+      query: {
+        handler() {
+          this.loadBefore();
+        },
+        deep: true,
       }
     },
     methods: {
+      handlerClickBefore() {
+        if (this.validatenull(this.query.code)) {
+          this.$message({type: "warning", message: "请选择病例编号"});
+          return;
+        }
+        Case.detailByCode(this.query.code).then(res => {
+          let data = res.data.data;
+          data.type = 1;
+          this.form = data;
+          this.$set(this.query, 'name', data.name);
+          this.diseaseOptions = data.medicineList.map(item => {
+            return {
+              label: item.id,
+              value: item.name,
+              obj: item,
+              slot: true,
+            }
+          })
+          this.loadMedicine();
+        })
+      },
+      handlerChangeCode(value) {
+        if (value === "" ) {
+          return;
+        }
+        Case.detailByCode(value).then(res => {
+          let data = res.data.data;
+          this.$set(this.query, 'name', data.name);
+        })
+      },
+      loadBefore() {
+        Case.list(this.query).then(res => {
+          let data = res.data.data;
+          this.nameOptions = Array.from(new Set(data.map(item => item.name))).map(item => ({
+            label: item,
+            value: item,
+          }));
+          this.codeOptions = Array.from(new Set(data.map(item => item.code))).map(item => ({
+            label: item,
+            value: item,
+          }));
+        })
+      },
       handlerMatch() {
         if (this.diseaseOptions.length === 0) {
           this.$message({message: "请添加病友症状", type: "warning"});
@@ -321,6 +388,7 @@
     created() {
       this.init();
       this.setTime();
+      this.loadBefore();
     }
   }
 </script>

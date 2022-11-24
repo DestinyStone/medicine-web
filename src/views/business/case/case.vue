@@ -77,7 +77,7 @@
           border: true,
           menu: true,
           index: true,
-          selection: true,
+          selection: false,
           viewBtn: true,
           menuWidth: 220,
           dialogClickModal: false,
@@ -91,16 +91,20 @@
               prop: "code",
               search: true,
               span: 24,
+              searchSpan: 3,
               searchPlaceholder: "病例编号"
             },
             {
               label: "处方人",
               prop: "createUserName",
               span: 24,
+              searchSpan: 3,
+              search: true,
             },
             {
               label: "姓名",
               prop: "name",
+              search: true,
             },
             {
               label: "年龄",

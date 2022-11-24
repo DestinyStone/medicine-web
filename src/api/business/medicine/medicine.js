@@ -64,4 +64,14 @@ export default class Medicine {
       data: data
     });
   }
+  static download(type) {
+    return request({
+      url: `/api/bus/download/medicine/template`,
+      method: 'get',
+      params: {
+        type
+      },
+      responseType: "blob",
+    });
+  }
 }

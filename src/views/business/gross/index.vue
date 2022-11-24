@@ -70,7 +70,7 @@
           border: true,
           menu: false,
           index: true,
-          selection: true,
+          selection: false,
           viewBtn: true,
           menuWidth: 220,
           dialogClickModal: false,

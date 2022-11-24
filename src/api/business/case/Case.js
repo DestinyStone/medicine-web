@@ -36,4 +36,46 @@ export default class Case {
       }
     });
   }
+  static detailByCode(code) {
+    return request({
+      url: '/api/bus/case/detail/code',
+      method: 'get',
+      params: {
+        code
+      }
+    });
+  }
+  static code() {
+    return request({
+      url: `/api/bus/case/code`,
+      method: 'get',
+    });
+  }
+  static list(params) {
+    return request({
+      url: `/api/bus/case/list`,
+      method: 'get',
+      params: {
+        ...params
+      }
+    });
+  }
+  static download(id) {
+    return request({
+      url: `/api/bus/case/download`,
+      method: 'get',
+      params: {
+        id
+      },
+      responseType: "blob",
+    });
+  }
+  static downloadObj(data) {
+    return request({
+      url: `/api/bus/case/download/obj`,
+      method: 'post',
+      data: data,
+      responseType: "blob",
+    });
+  }
 }
