@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<script>
+  window.onload = () => {
+    let component = document.getElementById("component");
+    component.style.height = document.body.offsetHeight - 400 + 'px';
+    setParams();
+    window.print();
+  }
+
+  function setParams() {
+    let params = ["code", "caseTime", "name", "sex", "age", "phone", "address", "putUp", "dialectical", "component", "enjoin"];
+    for(let item of params) {
+      let temp = document.getElementById(item);
+      if (temp !== null && temp !== undefined) {
+        temp.innerText = geturlparam(item);
+      }
+
+    }
+
+  }
+
+  function geturlparam(type){
+    // window.location.href 获取地址
+    let url = window.location.href
+    let p=url.split('?')[1]
+    let params=new URLSearchParams(p)
+    return params.get(type);
+  }
+</script>
+<style>
+  html, body{
+    width: 794px;
+    height: 1123px;
+    padding: 0;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+   .label {
+    width: 80px;
+    display: inline-block;
+    text-align: justify;
+    text-align-last:justify;
+    text-justify: distribute-all-lines;/*这行必加，兼容ie浏览器*/
+  }
+  .content {
+    width: 200px;
+  }
+</style>
+<body style="height: 100%">
+  <div >
+  <div style="padding: 10px; font-size: 25px; border-bottom: 1px solid #2d8cf0; text-align: center;">中药处方单</div>
+  <div style="border-bottom: 1px solid #2d8cf0; padding: 10px 20px;">
+    <div style="display: flex; line-height: 30px; height: 30px;">
+      <div style="display: flex;">
+        <div class="label">病历编号：</div>
+        <div class="content" id="code">{{form.code}}</div>
+      </div>
+      <div style="display: flex;">
+        <div class="label">就诊时间：</div>
+        <div id="caseTime" class="content">{{form.caseTime}}</div>
+      </div>
+    </div>
+    <div style="display: flex; line-height: 30px; height: 30px;">
+      <div style="display: flex;">
+        <div class="label">姓名：</div>
+        <div id="name" class="content">{{form.name}}</div>
+      </div>
+      <div style="display: flex;">
+        <div class="label">性别：</div>
+        <div id="sex" class="content">{{form.sex === 1 ? '女' : '男'}}</div>
+      </div>
+      <div style="display: flex;">
+        <div class="label">年龄：</div>
+        <div id="age" class="content">{{form.age}}</div>
+      </div>
+    </div>
+    <div style="display: flex; line-height: 30px; height: 30px;">
+      <div style="display: flex;">
+        <div class="label">联系电话：</div>
+        <div id="phone" class="content">{{form.phone}}</div>
+      </div>
+      <div style="display: flex;">
+        <div class="label">住址：</div>
+        <div id="address" class="content">{{form.address}}</div>
+      </div>
+    </div>
+    <div style="display: flex; line-height: 30px; height: 30px;">
+      <div style="display: flex;">
+        <div class="label">症状：</div>
+        <div id="putUp" class="content">{{putUp}}</div>
+      </div>
+    </div>
+    <div style="display: flex; line-height: 30px; height: 30px;">
+      <div style="display: flex;">
+        <div class="label">辩证：</div>
+        <div id="dialectical" class="content">{{dialectical}}</div>
+      </div>
+    </div>
+  </div>
+  <div style="border-bottom: 1px solid #2d8cf0; padding-bottom: 20px; padding-left: 20px;">
+    <div>
+      <span style="font-size: 35px;">Rp:</span>
+      <span style="margin-left: 50px;">(克)</span>
+    </div>
+    <div id="component" style="margin-left: 50px; margin-top: 20px; font-size: 20px;">{{componentForm.component}}</div>
+  </div>
+  <div style=" padding: 20px 0; border-bottom: 1px solid #2d8cf0;">
+    <div id="enjoin" style="margin-left: 50px;">医嘱：{{componentForm.enjoin}}</div>
+  </div>
+</div>
+</body>
+</html>
