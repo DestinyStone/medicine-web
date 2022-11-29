@@ -1,5 +1,5 @@
 <template>
-  <basic-container class="check-number" style="height: 100%;">
+  <basic-container ref="checkNumber" class="check-number" style="height: 100%;">
     <div>
       <div style="padding: 10px; font-size: 18px; border-bottom: 1px solid #2d8cf0; text-align: center;">{{validatenull(id) ? "中药处方单" : "病历"}}</div>
       <div style="border-bottom: 1px solid #2d8cf0; padding: 10px 0;">
@@ -65,6 +65,7 @@
       <el-button type="warning" @click="handlerBack">{{validatenull(id) ? "返回组方" : "返回"}}</el-button>
       <el-button type="primary" v-if="validatenull(id)" @click="handlerFinish">保存</el-button>
       <el-button type="success" @click="handlerDownload">下载</el-button>
+<!--      <el-button type="success" @click="handlerCopy">打印</el-button>-->
     </div>
   </basic-container>
 </template>
@@ -105,6 +106,9 @@
       }
     },
     methods: {
+      handlerCopy() {
+        this.$print(this.$refs["checkNumber"]);
+      },
       handlerDownload() {
         if (!this.validatenull(this.id)) {
           Case.download(this.id).then(res => {
