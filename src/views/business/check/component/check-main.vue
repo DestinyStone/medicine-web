@@ -107,7 +107,7 @@
         </div>
         <div style="height: 50px; line-height: 50px;"></div>
         <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-          <check-main-detail :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
+          <check-main-detail  :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
         </div>
       </div>
     </div>
@@ -285,29 +285,64 @@
         }
       },
       handlerClose(item) {
-        let filter = this.diseaseOptions.filter(filterItem => filterItem.label === item.label)[0];
-        let index = this.diseaseOptions.indexOf(filter);
+        let copyOptions = JSON.parse(JSON.stringify(this.diseaseOptions.filter(item => item.show === true)));
 
-        this.diseaseOptions.splice(index, 1);
-        this.loadWith();
-        this.isChange = true;
-        // this.loadMedicine();
-        // this.medicine1Detail = {};
-        // this.medicine2Detail = {};
-        // this.reloadKey++;
+        let filter = copyOptions.filter(filterItem => filterItem.label === item.label)[0];
+        let index = copyOptions.indexOf(filter);
+
+        copyOptions.splice(index, 1);
+        let ids = copyOptions.map(item => item.label).join(",");
+        Gross.resemblance(ids).then(res => {
+          let data = res.data.data;
+          if (!this.validatenull(data)) {
+            let grossList = data.map(item => ({
+              label: item.id,
+              value: item.name,
+              slot: true,
+              show: false,
+            }));
+            copyOptions = copyOptions.concat(grossList);
+          }
+          this.$set(this, 'diseaseOptions', copyOptions);
+          this.loadWith();
+          this.isChange = true;
+        });
       },
       handlerDbSearch(item) {
-        let filter = this.diseaseOptions.filter(filterItem => filterItem.label === item.label);
+        let filter = this.diseaseOptions.filter(item => item.show === true).filter(filterItem => filterItem.label === item.label);
         if (filter.length > 0) {
           this.$message({type: "warning", message: `病友症状中已存在:${item.value}`});
           return;
         }
 
+        filter = this.diseaseOptions.filter(item => item.show === false).filter(filterItem => filterItem.label === item.label);
+        if (filter.length > 0) {
+          this.$message({type: "warning", message: `病友同义症状中已存在:${item.value}`});
+          return;
+        }
+
         let copy = JSON.parse(JSON.stringify(item));
         copy.slot = true;
-        this.diseaseOptions.push(copy);
-        this.isChange = true;
-        this.loadWith();
+        copy.show = true;
+
+        let copyOptions = JSON.parse(JSON.stringify(this.diseaseOptions.filter(item => item.show === true)));
+        copyOptions.push(copy);
+        let ids = copyOptions.map(item => item.label).join(",");
+        Gross.resemblance(ids).then(res => {
+          let data = res.data.data;
+          if (!this.validatenull(data)) {
+            let grossList = data.map(item => ({
+              label: item.id,
+              value: item.name,
+              slot: true,
+              show: false,
+            }));
+            copyOptions = copyOptions.concat(grossList);
+          }
+          this.$set(this, 'diseaseOptions', copyOptions);
+          this.isChange = true;
+          this.loadWith();
+        });
       },
       init() {
         this.contentHeight = document.body.offsetHeight - 380;
