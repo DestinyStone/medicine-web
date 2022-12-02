@@ -1,7 +1,7 @@
 <template>
-  <basic-container ref="checkNumber" class="check-number" style="height: 100%;">
+  <basic-container class="check-number" style="height: 100%;">
     <div>
-      <div style="padding: 10px; font-size: 18px; border-bottom: 1px solid #2d8cf0; text-align: center;">{{validatenull(id) ? "中药处方单" : "病历"}}</div>
+      <div style="padding: 10px; font-size: 25px; border-bottom: 1px solid #2d8cf0; text-align: center;">{{validatenull(id) ? "中药处方单" : "病历"}}</div>
       <div style="border-bottom: 1px solid #2d8cf0; padding: 10px 0;">
         <div style="display: flex; line-height: 30px; height: 30px;">
          <div style="display: flex;">
@@ -55,17 +55,17 @@
           <span style="font-size: 35px;">Rp:</span>
           <span style="margin-left: 50px;">(克)</span>
         </div>
-        <div style="margin-left: 50px; margin-top: 20px;" :style="{height: height + 'px'}">{{componentForm.component}}</div>
+        <div style="margin-left: 50px; margin-top: 20px; font-size: 20px;" :style="{height: height + 'px'}">{{componentForm.component}}</div>
       </div>
       <div style=" padding: 20px 0; border-bottom: 1px solid #2d8cf0;">
         <div style="margin-left: 50px;">医嘱：{{componentForm.enjoin}}</div>
       </div>
     </div>
     <div style="padding: 20px; display: flex; justify-content: center;">
-      <el-button type="warning" @click="handlerBack">{{validatenull(id) ? "返回组方" : "返回"}}</el-button>
-      <el-button type="primary" v-if="validatenull(id)" @click="handlerFinish">保存</el-button>
-      <el-button type="success" @click="handlerDownload">下载</el-button>
-<!--      <el-button type="success" @click="handlerCopy">打印</el-button>-->
+      <el-button type="warning" @click="handlerBack">{{rebackText}}</el-button>
+      <el-button type="primary" v-if="!isSave" @click="handlerFinish">保存</el-button>
+      <el-button type="success" @click="handlerDownload" v-if="isSave">下载</el-button>
+      <el-button type="primary" v-if="isSave" @click="handlerCopy">打印</el-button>
     </div>
   </basic-container>
 </template>
@@ -97,17 +97,20 @@
         default() {
           return {}
         }
-      }
+      },
     },
     data() {
       return {
         height: 0,
         code: "",
+        isSave: false,
       }
     },
     methods: {
       handlerCopy() {
-        this.$print(this.$refs["checkNumber"]);
+        window.open(
+          `/medicine.html?code=${this.form.code}&caseTime=${this.form.caseTime}&name=${this.form.name}&sex=${this.form.sex === 1 ? '女' : '男'}&age=${this.form.age + ""}&phone=${this.form.phone}&address=${this.form.address}&putUp=${this.putUp}&dialectical=${this.dialectical}&component=${this.componentForm.component}&enjoin=${this.componentForm.enjoin}`
+        );
       },
       handlerDownload() {
         if (!this.validatenull(this.id)) {
@@ -121,13 +124,20 @@
         })
       },
       handlerBack() {
-        this.$emit("back");
+        if (!this.validatenull(this.id) || this.isSave === false) {
+          this.$emit("back");
+          return;
+        }
+        if (this.isSave === true) {
+          this.$emit("reset");
+          return;
+        }
       },
       handlerFinish() {
 
         Case.save(this.getFormData()).then(() => {
           this.$message({type: "success", message: "保存成功"});
-          this.$emit("finish");
+          this.isSave = true;
         })
       },
       getFormData() {
@@ -180,6 +190,13 @@
       }
     },
     computed: {
+      rebackText() {
+        if (!this.validatenull(this.id)) {
+          return "返回";
+        }
+
+        return this.isSave ? "重新开诊" : "返回组方";
+      },
       putUp() {
         return this.diseaseOptions.map(item => item.obj).map(item => item.name).join("，");
       },
@@ -192,6 +209,11 @@
     },
     mounted() {
       this.init();
+    },
+    created() {
+      if (!this.validatenull(this.id)) {
+        this.isSave = true;
+      }
     }
   }
 </script>

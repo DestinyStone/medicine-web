@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :key="reloadKey">
     <check-main v-show="current === map[0]" @next="handlerNext"/>
     <check-component :disease-options="diseaseOptions"
                      :medicine1-options="medicine1Options"
@@ -12,6 +12,7 @@
                   :disease-options="diseaseOptions"
                   :component-form="componentForm"
                   @back="handlerBack"
+                  @reset="handlerReset"
                   @finish="handlerFinish"/>
   </div>
 </template>
@@ -33,9 +34,20 @@
         medicine1Options: [],
         medicine2Options: [],
         componentForm: {},
+        reloadKey: 0,
       }
     },
     methods: {
+      handlerReset() {
+        this.currentIndex = 0;
+        this.current = "main";
+        this.form = {};
+        this.diseaseOptions = [];
+        this.medicine1Options = [];
+        this.medicine2Options = [];
+        this.componentForm = {};
+        this.reloadKey++;
+      },
       handlerBack() {
         this.current = this.map[--this.currentIndex];
       },

@@ -103,11 +103,11 @@
       <div style="width: 32%; max-width: 32%;box-sizing: border-box; padding-right: 10px;">
         <div style="height: 50px; line-height: 50px;"></div>
         <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-          <check-main-detail :data="medicine1Detail" style="height: 100%;"/>
+          <check-main-detail :high="diseaseOptions" :data="medicine1Detail" style="height: 100%;"/>
         </div>
         <div style="height: 50px; line-height: 50px;"></div>
         <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-          <check-main-detail :data="medicine2Detail" style="height: 100%;"/>
+          <check-main-detail :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
         </div>
       </div>
     </div>

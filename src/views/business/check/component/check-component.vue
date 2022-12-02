@@ -21,11 +21,11 @@
         <div style="width: 32%; max-width: 32%;box-sizing: border-box; padding-right: 10px;">
           <div style="height: 50px; line-height: 50px;"></div>
           <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-            <check-main-detail :data="medicine1Detail" style="height: 100%;"/>
+            <check-main-detail :high="diseaseOptions" :data="medicine1Detail" style="height: 100%;"/>
           </div>
           <div style="height: 50px; line-height: 50px;"></div>
           <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
-            <check-main-detail :data="medicine2Detail" style="height: 100%;"/>
+            <check-main-detail :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
           </div>
         </div>
         <div style="width: 40%; max-width: 40%;box-sizing: border-box; padding-right: 30px;">
@@ -101,7 +101,9 @@
         height: 0,
         medicine1Detail: {},
         medicine2Detail: {},
-        form: {},
+        form: {
+          enjoin: "(1)每剂水煎2次，分两天服完，每天早中晚各服1次。（2）服药期间忌食辛辣刺激东西。",
+        },
         analyzeList: [],
       }
     },
@@ -121,7 +123,7 @@
         if (this.medicine1Options.length === 1) {
           params = [this.medicine1Options[0].label];
         }else {
-          params = [this.medicine1Options[0].label, this.medicine2Options[0].label];
+          params = [this.medicine1Options[0].label, this.medicine1Options[1].label];
         }
 
         Medicine.component(params).then(res => {

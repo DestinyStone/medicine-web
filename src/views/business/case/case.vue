@@ -129,6 +129,7 @@
             {
               label: "处方",
               prop: "component",
+              overHidden: true,
             },
           ],
         },
