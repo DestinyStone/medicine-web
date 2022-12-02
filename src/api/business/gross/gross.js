@@ -36,4 +36,13 @@ export default class Gross {
       data: names
     })
   }
+  static resemblance(ids) {
+    return request({
+      url: `/api/bus/gross/resemblance`,
+      method: 'get',
+      params: {
+        ids
+      }
+    })
+  }
 }

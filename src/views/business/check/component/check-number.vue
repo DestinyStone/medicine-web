@@ -184,7 +184,6 @@
                 obj: item,
               }
             })
-
           })
         }
       }
@@ -198,7 +197,7 @@
         return this.isSave ? "重新开诊" : "返回组方";
       },
       putUp() {
-        return this.diseaseOptions.map(item => item.obj).map(item => item.name).join("，");
+        return this.diseaseOptions.map(item => item.value).join("，");
       },
       dialectical() {
         if (this.validatenull(this.componentForm.dialectical)) {

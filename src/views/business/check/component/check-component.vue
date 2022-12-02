@@ -120,10 +120,13 @@
       },
       handlerComponent() {
         let params = [];
-        if (this.medicine1Options.length === 1) {
-          params = [this.medicine1Options[0].label];
-        }else {
-          params = [this.medicine1Options[0].label, this.medicine1Options[1].label];
+
+        if (this.medicine1Options.length >= 3) {
+          params = {ids: [this.medicine1Options[0].label, this.medicine1Options[1].label, this.medicine1Options[2].label], dictIds: this.diseaseOptions.map(item => item.label)};
+        }else if (this.medicine1Options.length >= 2) {
+          params = {ids: [this.medicine1Options[0].label, this.medicine1Options[1].label], dictIds: this.diseaseOptions.map(item => item.label)};
+        }else if (this.medicine1Options.length === 1) {
+          params = {ids: [this.medicine1Options[0].label], dictIds: this.diseaseOptions.map(item => item.label)};
         }
 
         Medicine.component(params).then(res => {
@@ -166,5 +169,7 @@
 </script>
 
 <style scoped>
-
+test {
+  overflow: hidden;
+}
 </style>
