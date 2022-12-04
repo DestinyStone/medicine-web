@@ -24,11 +24,15 @@
           <el-button type="primary" size="small"  @click="handlerClickSubmit">
             备 份
           </el-button>
+          <el-button type="warning" size="small"  @click="handlerClickBatchDelete">
+            删 除
+          </el-button>
         </template>
         <template slot-scope="scope" slot="menu">
           <div style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="primary" @click="handlerClickUpdate(scope.row, scope.index)">修改描述</el-link>
             <el-link :underline="false" type="primary" @click="handlerClickReback(scope.row, scope.index)">还原</el-link>
+            <el-link :underline="false" type="primary" @click="handlerDelete(scope.row, scope.index)">删除被封</el-link>
           </div>
         </template>
       </avue-crud>
@@ -82,7 +86,7 @@
           border: true,
           menu: true,
           index: true,
-          selection: false,
+          selection: true,
           viewBtn: true,
           menuWidth: 220,
           dialogClickModal: false,
@@ -149,6 +153,34 @@
       },
     },
     methods: {
+      handlerDelete(row) {
+        this.$confirm(`是否确定删除?`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          return Reback.delete(row.id);
+        }).then(() => {
+          this.$message({type: "success", message: "删除成功"});
+          this.onLoad(this.page);
+        })
+      },
+      handlerClickBatchDelete() {
+        if (this.selectionList.length === 0) {
+          this.$message({type: "warning", message: "请至少选择一条数据"});
+          return;
+        }
+        this.$confirm(`是否确定删除?`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          return Reback.delete(this.selectionList.map(item => item.id).join(","));
+        }).then(() => {
+          this.$message({type: "success", message: "删除成功"});
+          this.onLoad(this.page);
+        })
+      },
       handlerClickReback(row) {
         this.$confirm(`高危操作， 还原前请注意备份当前数据?`, "提示", {
           confirmButtonText: "还原",
@@ -165,22 +197,6 @@
       handlerClickDetail(row) {
         this.selectId = row.id;
         this.showDetail = true;
-      },
-      handlerClickBatchDelete() {
-        if (this.selectionList.length === 0) {
-          this.$message({type: "warning", message: "请至少选择一条数据"});
-          return;
-        }
-        this.$confirm(`是否确定删除?`, "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          return Analyze.delete(this.selectionList.map(item => item.id).join(","));
-        }).then(() => {
-          this.$message({type: "success", message: "删除成功"});
-          this.onLoad(this.page);
-        })
       },
       handlerUploadFile({file, call}) {
         let formData = new FormData();
@@ -205,18 +221,6 @@
       },
       handlerClickUpdate(row, index) {
         this.$refs["crud"].rowEdit(row, index);
-      },
-      handlerDelete(row) {
-        this.$confirm(`是否确定删除【${row.name}】?`, "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          return Analyze.delete(row.id);
-        }).then(() => {
-          this.$message({type: "success", message: "删除成功"});
-          this.onLoad(this.page);
-        })
       },
       handlerSubmit(row,done, loading) {
         row.type = this.type;

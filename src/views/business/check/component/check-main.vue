@@ -1,5 +1,5 @@
 <template>
-  <basic-container style="height: 100%;">
+  <basic-container style="height: 100%; min-height: 800px;" id="checkMainWrapper">
     <div style="display: flex; justify-content: space-between;">
       <div style="display: flex; flex-grow: 1; width: 80%">
         <div style="height: 30px; font-size: 20px; width: 100px;">{{form.type === 0 ? '初诊' : '复诊'}}</div>
@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div style="display: flex; margin-top: 50px;" :style="{height: contentHeight + 'px'}">
+    <div style="display: flex; margin-top: 20px;" :style="{height: contentHeight + 'px'}">
 
       <div style="width: 17%; padding-right: 30px;box-sizing: border-box; height: 100%">
         <el-input placeholder="症状搜索" @input="handlerSearch" v-model="search"/>
@@ -101,17 +101,16 @@
         </div>
       </div>
       <div style="width: 32%; max-width: 32%;box-sizing: border-box; padding-right: 10px;">
-        <div style="height: 50px; line-height: 50px;"></div>
-        <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
+        <div style="width: 100%; height: calc(47%); border: 1px solid #DCDFE6; border-radius: 5px;">
           <check-main-detail :high="diseaseOptions" :data="medicine1Detail" style="height: 100%;"/>
         </div>
-        <div style="height: 50px; line-height: 50px;"></div>
-        <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
+        <div style="height: 20px; line-height: 50px;"></div>
+        <div style="width: 100%; height: calc(48%); border: 1px solid #DCDFE6; border-radius: 5px;">
           <check-main-detail  :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
         </div>
       </div>
     </div>
-    <div style="padding: 10px; display: flex; justify-content: center;">
+    <div style="padding: 20px; display: flex; justify-content: center;">
       <el-button type="success" @click="handlerMatch">智能匹配</el-button>
       <el-button type="primary" @click="handlerNext">确定诊疗</el-button>
     </div>
@@ -153,7 +152,7 @@
         medicine1Loading: false,
         medicine2Loading: false,
         medicineLoadingText: "智能匹配中",
-
+        contentHeight: 0,
       }
     },
     watch: {
@@ -345,7 +344,11 @@
         });
       },
       init() {
-        this.contentHeight = document.body.offsetHeight - 380;
+        this.contentHeight = document.body.offsetHeight - 350;
+        console.log(333, this.contentHeight);
+        if (this.contentHeight < 500) {
+          this.contentHeight = 500;
+        }
         this.loadSynonymsSearch();
       },
       loadMedicine() {

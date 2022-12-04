@@ -30,4 +30,13 @@ export default class Reback {
       data: data,
     })
   }
+  static delete(ids) {
+    return request({
+      url: `/api/bus/reback/delete`,
+      method: 'get',
+      params: {
+        ids
+      },
+    })
+  }
 }

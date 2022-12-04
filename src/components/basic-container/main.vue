@@ -1,6 +1,6 @@
 <template>
   <div class="basic-container"
-       style="min-width: 1200px; height: 100%; overflow: auto"
+       style="min-width: 1250px;height: 100%; overflow: auto"
        :style="styleName"
        :class="{'basic-container--block':block}">
     <el-card class="basic-container__card" style="height: calc(100% - 30px);">

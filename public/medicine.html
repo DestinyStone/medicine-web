@@ -3,7 +3,7 @@
 <script>
   window.onload = () => {
     let component = document.getElementById("component");
-    component.style.height = document.body.offsetHeight - 400 + 'px';
+    component.style.height = window.innerHeight - 350 + 'px';
     setParams();
     window.print();
   }
@@ -15,9 +15,7 @@
       if (temp !== null && temp !== undefined) {
         temp.innerText = geturlparam(item);
       }
-
     }
-
   }
 
   function geturlparam(type){
@@ -38,6 +36,7 @@
   }
    .label {
     width: 80px;
+     min-width: 80px;
     display: inline-block;
     text-align: justify;
     text-align-last:justify;
@@ -85,16 +84,16 @@
         <div id="address" class="content">{{form.address}}</div>
       </div>
     </div>
-    <div style="display: flex; line-height: 30px; height: 30px;">
+    <div style="display: flex; line-height: 30px; ">
       <div style="display: flex;">
         <div class="label">症状：</div>
-        <div id="putUp" class="content">{{putUp}}</div>
+        <div id="putUp" class="content" style="width: unset;">{{putUp}}</div>
       </div>
     </div>
-    <div style="display: flex; line-height: 30px; height: 30px;">
+    <div style="display: flex; line-height: 30px;">
       <div style="display: flex;">
         <div class="label">辩证：</div>
-        <div id="dialectical" class="content">{{dialectical}}</div>
+        <div id="dialectical" class="content" style="width: unset;">{{dialectical}}</div>
       </div>
     </div>
   </div>
@@ -103,7 +102,7 @@
       <span style="font-size: 35px;">Rp:</span>
       <span style="margin-left: 50px;">(克)</span>
     </div>
-    <div id="component" style="margin-left: 50px; margin-top: 20px; font-size: 20px;">{{componentForm.component}}</div>
+    <div id="component" style="margin-left: 50px; margin-top: 20px; font-size: 30px; position:relative; left: -10px; text-align: center;">{{componentForm.component}}</div>
   </div>
   <div style=" padding: 20px 0; border-bottom: 1px solid #2d8cf0;">
     <div id="enjoin" style="margin-left: 50px;">医嘱：{{componentForm.enjoin}}</div>

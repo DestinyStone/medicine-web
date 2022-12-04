@@ -121,10 +121,12 @@
             {
               label: "症状",
               prop: "medicineNames",
+              overHidden: true,
             },
             {
               label: "辩证",
               prop: "dialectical",
+              overHidden: true,
             },
             {
               label: "处方",

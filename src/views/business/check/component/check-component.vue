@@ -1,5 +1,5 @@
 <template>
-  <basic-container style="height: 100%;">
+  <basic-container style="height: 100%; min-height: 800px;">
     <div :style="{height: height + 'px'}">
       <div style="height: calc(100% - 155px); display: flex;">
         <div style="width: 17%; max-width: 17%;box-sizing: border-box; padding-right: 30px;">
@@ -18,17 +18,16 @@
             <check-main-select  :options="medicine2Options" :is-hover-stop="true"  @click="(data) => handlerClick(data, 1)"/>
           </div>
         </div>
-        <div style="width: 32%; max-width: 32%;box-sizing: border-box; padding-right: 10px;">
-          <div style="height: 50px; line-height: 50px;"></div>
-          <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
+        <div style="width: 42%; max-width: 42%;box-sizing: border-box; padding-right: 30px;">
+          <div style="width: 100%; height: calc(47%); border: 1px solid #DCDFE6; border-radius: 5px;">
             <check-main-detail :high="diseaseOptions" :data="medicine1Detail" style="height: 100%;"/>
           </div>
-          <div style="height: 50px; line-height: 50px;"></div>
-          <div style="width: 100%; height: calc(50% - 52px); border: 1px solid #DCDFE6; border-radius: 5px;">
+          <div style="height: 20px; line-height: 50px;"></div>
+          <div style="width: 100%; height: calc(48%); border: 1px solid #DCDFE6; border-radius: 5px;">
             <check-main-detail :high="diseaseOptions" :data="medicine2Detail" style="height: 100%;"/>
           </div>
         </div>
-        <div style="width: 40%; max-width: 40%;box-sizing: border-box; padding-right: 30px;">
+        <div style="width: 30%; max-width: 30%;box-sizing: border-box; padding-right: 30px;">
           <div style="height: 50px; line-height: 50px;">药性分析</div>
           <div style="width: 100%; height: calc(100% - 50px); border: 1px solid #DCDFE6; overflow: auto; border-radius: 5px;">
             <check-main-component-detail :data="analyzeList" />
@@ -160,6 +159,9 @@
       },
       init() {
         this.height =  document.body.offsetHeight - 180;
+        if (this.height < 700) {
+          this.height = 700;
+        }
       }
     },
     mounted() {

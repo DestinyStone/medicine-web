@@ -1,6 +1,7 @@
 <template>
   <div class="check-main-select" style="height: 100%; overflow: auto; width:100%;"  element-loading-spinner="el-icon-loading"   v-loading="loading"  :element-loading-text="loadingText">
-    <div class="check-main-select-item" :class="{'active': currentIndex === index}" @click="handlerClick(item, index)" @dblclick="handlerDbClick(item, index)" v-for="(item, index) in userOptions" :key="index" style="padding: 10px; cursor: pointer; display: flex; justify-content: space-between;">
+    <div class="check-main-select-item" :class="{'active': currentIndex === index}" @click="handlerClick(item, index)" @dblclick="handlerDbClick(item, index)" v-for="(item, index) in userOptions" :key="index"
+         style="padding: 8px 10px; cursor: pointer; display: flex; justify-content: space-between;">
       <div style="white-space: nowrap; padding-right: 10px;">
         <span v-if="item.slot === true">{{item.value}}</span>
         <slot :data="item" v-if="item.slot === false"/>

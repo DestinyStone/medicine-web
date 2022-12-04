@@ -2,7 +2,7 @@
   <basic-container class="check-number" style="height: 100%;">
     <div>
       <div style="padding: 10px; font-size: 25px; border-bottom: 1px solid #2d8cf0; text-align: center;">{{validatenull(id) ? "中药处方单" : "病历"}}</div>
-      <div style="border-bottom: 1px solid #2d8cf0; padding: 10px 0;">
+      <div style="border-bottom: 1px solid #2d8cf0; padding: 10px 0;" ref="content" id="content">
         <div style="display: flex; line-height: 30px; height: 30px;">
          <div style="display: flex;">
            <div class="label">病历编号：</div>
@@ -37,16 +37,16 @@
             <div class="content">{{form.address}}</div>
           </div>
         </div>
-        <div style="display: flex; line-height: 30px; height: 30px;">
+        <div style="display: flex; line-height: 30px;">
           <div style="display: flex;">
             <div class="label">症状：</div>
-            <div class="content">{{putUp}}</div>
+            <div class="content" style="width: unset">{{putUp}}</div>
           </div>
         </div>
-        <div style="display: flex; line-height: 30px; height: 30px;">
+        <div style="display: flex; line-height: 30px; ">
           <div style="display: flex;">
             <div class="label">辩证：</div>
-            <div class="content">{{dialectical}}</div>
+            <div class="content" style="width: unset;">{{dialectical}}</div>
           </div>
         </div>
       </div>
@@ -153,14 +153,19 @@
         save.medicineIds = this.diseaseOptions.map(item => item.label);
         save.dialectical = this.componentForm.dialectical;
         save.component = this.componentForm.component;
-        save.enjoin = this.componentForm.enjoin;
+        save.enjoin = "医嘱：" + this.componentForm.enjoin;
         save.medicineNames = this.putUp;
         return save;
       },
+      setHeight() {
+       setInterval(() => {
+         let contentHeight = document.getElementById("content").offsetHeight;
+         this.height = document.body.offsetHeight - contentHeight - 470;
+       }, 30)
+      },
       init() {
-        this.height = document.body.offsetHeight - 600;
-
         if (this.validatenull(this.id)) {
+          this.setHeight();
           Case.code().then(res => {
             this.code = res.data.data;
           })
@@ -168,6 +173,7 @@
 
         if (!this.validatenull(this.id)) {
           Case.detail(this.id).then(res => {
+            this.setHeight();
             let data = res.data.data;
             let medicineList = data.medicineList;
             this.form = data;
