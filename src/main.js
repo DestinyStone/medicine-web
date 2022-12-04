@@ -60,3 +60,6 @@ new Vue({
   i18n,
   render: h => h(App)
 }).$mount('#app');
+
+import Print from '@/util/print.js'
+Vue.use(Print) // 注册
