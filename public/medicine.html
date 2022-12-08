@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="UTF-8">
+</head>
 <script>
   window.onload = () => {
     let component = document.getElementById("component");
@@ -13,9 +16,42 @@
     for(let item of params) {
       let temp = document.getElementById(item);
       if (temp !== null && temp !== undefined) {
-        temp.innerText = geturlparam(item);
+        let innerText = geturlparam(item);
+
+        if (item === "component") {
+          let innerTexts = innerText.split("，");
+          let innerTextGroup = [];
+          let groupIndex = -1;
+          for(let i = 0; i<innerTexts.length; i+=4) {
+            groupIndex++;
+            let current = [];
+            for (let j = i; j<innerTexts.length && j < i + 4; j++) {
+              current.push(innerTexts[i + j % 4]);
+            }
+            innerTextGroup.push(current);
+          }
+
+          let htmls = "";
+          for(let i = 0; i<innerTextGroup.length; i++) {
+            for(let j = 0; j<innerTextGroup[i].length; j++) {
+              if (j === innerTextGroup[i].length - 1) {
+                htmls += `<span>${innerTextGroup[i][j]}</span>`
+              }else {
+                htmls += `<span style="height: 80px; line-height: 80px;">${innerTextGroup[i][j]}</span><span style="position:relative; top: 8px;">，</span>`
+              }
+            }
+            htmls += "</br>";
+          }
+          temp.innerHTML = htmls;
+        }else {
+          temp.innerText = innerText;
+        }
+
+
       }
+
     }
+
   }
 
   function geturlparam(type){
@@ -102,7 +138,9 @@
       <span style="font-size: 35px;">Rp:</span>
       <span style="margin-left: 50px;">(克)</span>
     </div>
-    <div id="component" style="margin-left: 50px; margin-top: 20px; font-size: 30px; position:relative; left: -10px; text-align: center;">{{componentForm.component}}</div>
+    <div style="margin-left: 50px; margin-top: 20px; font-size: 30px; display: flex; justify-content: center; width: 80%;  text-align: left;">
+      <div id="component">{{componentForm.component}}</div>
+    </div>
   </div>
   <div style=" padding: 20px 0; border-bottom: 1px solid #2d8cf0;">
     <div id="enjoin" style="margin-left: 50px;">医嘱：{{componentForm.enjoin}}</div>

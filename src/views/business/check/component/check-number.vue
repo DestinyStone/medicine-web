@@ -64,7 +64,6 @@
     <div style="padding: 20px; display: flex; justify-content: center;">
       <el-button type="warning" @click="handlerBack">{{rebackText}}</el-button>
       <el-button type="primary" v-if="!isSave" @click="handlerFinish">保存</el-button>
-      <el-button type="success" @click="handlerDownload" v-if="isSave">下载</el-button>
       <el-button type="primary" v-if="isSave" @click="handlerCopy">打印</el-button>
     </div>
   </basic-container>
