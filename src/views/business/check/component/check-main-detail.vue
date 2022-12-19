@@ -14,10 +14,21 @@
         <div>{{data.solve}}</div>
       </div>
       <div class="content-wrapper">
-        <div class="title">注解:</div>
+        <div class="title" style="position:relative;">
+          <div>注解:</div>
+          <div @click="show = true" style="cursor: pointer;margin-top: 10px;"><i style="font-size: 25px" class="el-icon-tickets"/></div>
+        </div>
         <div style="overflow: auto;" :style="{maxHeight: height + 'px'}"><pre style="margin-top: 0 !important;">{{data.remark}}</pre></div>
       </div>
     </div>
+    <el-dialog
+      append-to-body
+      title="注解"
+      :visible.sync="show"
+      width="30%"
+      :before-close="handleClose">
+      <span>{{data.remark}}</span>
+    </el-dialog>
   </div>
 </template>
 
@@ -40,6 +51,7 @@
     },
     data() {
       return {
+        show: false,
         height: 0
       }
     },
@@ -64,6 +76,9 @@
       },
     },
     methods: {
+      handleClose() {
+        this.show = false;
+      },
       setHeight() {
         if (this.validatenull(this.$refs['checkMainDetail'])) {
           return;
