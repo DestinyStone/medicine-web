@@ -25,9 +25,11 @@
       append-to-body
       title="注解"
       :visible.sync="show"
-      width="30%"
+      width="60%"
       :before-close="handleClose">
-      <span>{{data.remark}}</span>
+      <div :style="{height: bodyHeight + 'px', maxHeight: bodyHeight + 'px'}" style="overflow: auto; font-size: 20px;">
+        <pre>{{data.remark}}</pre>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -52,7 +54,8 @@
     data() {
       return {
         show: false,
-        height: 0
+        height: 0,
+        bodyHeight: 0,
       }
     },
     computed: {
@@ -84,6 +87,10 @@
           return;
         }
         this.height = this.$refs['checkMainDetail'].offsetHeight - 160;
+        this.bodyHeight = document.body.offsetHeight - 400;
+        if (this.bodyHeight < 300) {
+          this.bodyHeight = 300;
+        }
       },
       init() {
         this.setHeight();
